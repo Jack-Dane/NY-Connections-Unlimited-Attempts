@@ -1,4 +1,8 @@
 
+function getConnectionsResult() {
+    chrome.runtime.sendMessage("store-result");
+}
+
 function waitForElement(selector) {
     return new Promise(resolve => {
         if (document.querySelector(selector)) {
@@ -26,3 +30,5 @@ waitForElement("button[data-testid='submit-btn']").then((element) => {
         event.stopPropagation();
     });
 });
+
+getConnectionsResult();

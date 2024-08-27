@@ -8,10 +8,19 @@
   },
   "content_scripts": [
     {
-      "js": ["scripts/connections.js"],
+      "js": [
+        "scripts/connections.js"
+      ],
       "matches": [
         "https://www.nytimes.com/games/connections*"
       ]
     }
-  ]
+  ],
+  "permissions": [
+    "nativeMessaging"
+  ],
+  "background": {
+    "service_worker": "service-worker/connections.js",
+    "type": "module"
+  }
 }
