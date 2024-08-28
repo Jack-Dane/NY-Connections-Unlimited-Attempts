@@ -1,9 +1,20 @@
 
+function zeroLeadingDate(dateValue) {
+    return ("0" + dateValue).slice(-2);
+}
+
 chrome.runtime.onMessage.addListener(
     (message, sender, sendResponse) => {
-        console.log(message);
         if (message === "store-result") {
-            fetch("https://www.nytimes.com/svc/connections/v2/2024-08-27.json")
+            const currentDate = new Date();
+            const dateString = `\
+${currentDate.getFullYear()}-\
+${zeroLeadingDate(currentDate.getMonth() + 1)}-\
+${zeroLeadingDate(currentDate.getDate())}
+`;
+            console.log(dateString);
+
+            fetch(`https://www.nytimes.com/svc/connections/v2/${dateString}.json`)
                 .then(response => response.json())
                 .then(jsonResponse => console.log(jsonResponse));
         }
