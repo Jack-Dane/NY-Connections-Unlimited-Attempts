@@ -17,7 +17,8 @@
     }
   ],
   "permissions": [
-    "nativeMessaging"
+    "nativeMessaging",
+    "storage"
   ],
   "background": {
     "service_worker": "service-worker/connections.js",
