@@ -20,7 +20,28 @@ ${zeroLeadingDate(currentDate.getDate())}
 
 function checkResult(message) {
     console.log("Checking result");
-    console.log(message.results);
+    console.log(message.guess);
+
+    return chrome.storage.local.get("connections_result").then(results => {
+        let categories = results["connections_result"]["categories"];
+        let foundResult = false;
+
+        let resultsCount = [0, 0, 0, 0];
+        for (let categoryIndex = 0; categoryIndex < categories.length; categoryIndex++) {
+            categories[categoryIndex]["cards"].forEach(card => {
+                if (message.guess.includes(card["content"])) {
+                    resultsCount[categoryIndex]++;
+                }
+            });
+
+            if (resultsCount[categoryIndex] === 4) {
+                foundResult = true;
+                break;
+            }
+        }
+
+        return foundResult;
+    });
 }
 
 chrome.runtime.onMessage.addListener(
@@ -28,7 +49,14 @@ chrome.runtime.onMessage.addListener(
         if (message.message === "store-result") {
             storeResult();
         } else if (message.message === "check-result") {
-            checkResult(message);
+            checkResult(message).then(success => {
+                sendResponse({
+                    succeeded: success
+                });
+            });
+
+            // keep the message channel open so the promise chain can send the response
+            return true;
         }
     }
 );

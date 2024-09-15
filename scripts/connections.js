@@ -44,7 +44,9 @@ waitForElement("button[data-testid='submit-btn']").then((element) => {
         chrome.runtime.sendMessage(
             {
                 message: "check-result",
-                results: selectedWords
+                guess: selectedWords
+            }, (response) => {
+                console.log(response);
             }
         );
     });
