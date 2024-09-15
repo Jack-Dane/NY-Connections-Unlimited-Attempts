@@ -23,13 +23,30 @@ function waitForElement(selector) {
     })
 }
 
+function collectResult() {
+    let selectedBoxes = document.querySelectorAll(
+        "input[data-testid='card-input'][type='checkbox']:checked"
+    );
+
+    let selectedWords = [];
+    selectedBoxes.forEach(selectedBox => {
+        selectedWords.push(selectedBox.value);
+    })
+    return selectedWords;
+}
+
 waitForElement("button[data-testid='submit-btn']").then((element) => {
     element.addEventListener("click", (event) => {
-        console.log("Submit clicked!");
         event.preventDefault();
         event.stopPropagation();
 
-        chrome.runtime.sendMessage({message: "check-result"})
+        let selectedWords = collectResult();
+        chrome.runtime.sendMessage(
+            {
+                message: "check-result",
+                results: selectedWords
+            }
+        );
     });
 });
 

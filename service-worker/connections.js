@@ -20,6 +20,7 @@ ${zeroLeadingDate(currentDate.getDate())}
 
 function checkResult(message) {
     console.log("Checking result");
+    console.log(message.results);
 }
 
 chrome.runtime.onMessage.addListener(
