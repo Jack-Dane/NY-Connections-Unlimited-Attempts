@@ -18,10 +18,16 @@ ${zeroLeadingDate(currentDate.getDate())}
         .catch(error => { console.error(error) });
 }
 
+function checkResult(message) {
+    console.log("Checking result");
+}
+
 chrome.runtime.onMessage.addListener(
     (message, sender, sendResponse) => {
-        if (message === "store-result") {
+        if (message.message === "store-result") {
             storeResult();
+        } else if (message.message === "check-result") {
+            checkResult(message);
         }
     }
 );

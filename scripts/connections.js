@@ -1,6 +1,6 @@
 
 function getConnectionsResult() {
-    chrome.runtime.sendMessage("store-result");
+    chrome.runtime.sendMessage({message: "store-result"});
 }
 
 function waitForElement(selector) {
@@ -28,6 +28,8 @@ waitForElement("button[data-testid='submit-btn']").then((element) => {
         console.log("Submit clicked!");
         event.preventDefault();
         event.stopPropagation();
+
+        chrome.runtime.sendMessage({message: "check-result"})
     });
 });
 
