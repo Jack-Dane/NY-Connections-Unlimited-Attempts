@@ -34,6 +34,13 @@ function checkResult(message) {
                 }
             });
 
+            if (resultsCount[categoryIndex] < 4 && resultsCount[categoryIndex] > 0) {
+                // incomplete means failure
+                // 0 could still mean success
+                foundResult = false;
+                break;
+            }
+
             if (resultsCount[categoryIndex] === 4) {
                 foundResult = true;
                 break;
