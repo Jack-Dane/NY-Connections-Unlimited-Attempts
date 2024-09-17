@@ -26,22 +26,22 @@ function checkResult(message) {
         let categories = results["connections_result"]["categories"];
         let foundResult = false;
 
-        let resultsCount = [0, 0, 0, 0];
         for (let categoryIndex = 0; categoryIndex < categories.length; categoryIndex++) {
+            let totalCorrectForCategory = 0;
             categories[categoryIndex]["cards"].forEach(card => {
                 if (message.guess.includes(card["content"])) {
-                    resultsCount[categoryIndex]++;
+                    totalCorrectForCategory++;
                 }
             });
 
-            if (resultsCount[categoryIndex] < 4 && resultsCount[categoryIndex] > 0) {
+            if (totalCorrectForCategory < 4 && totalCorrectForCategory > 0) {
                 // incomplete means failure
                 // 0 could still mean success
                 foundResult = false;
                 break;
             }
 
-            if (resultsCount[categoryIndex] === 4) {
+            if (totalCorrectForCategory === 4) {
                 foundResult = true;
                 break;
             }
