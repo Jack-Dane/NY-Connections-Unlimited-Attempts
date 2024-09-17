@@ -18,36 +18,44 @@ ${zeroLeadingDate(currentDate.getDate())}
         .catch(error => { console.error(error) });
 }
 
+function checkResultCategory(categories, categoryIndex, guess) {
+    let totalCorrectForCategory = 0;
+    categories[categoryIndex]["cards"].forEach(card => {
+        if (guess.includes(card["content"])) {
+            totalCorrectForCategory++;
+        }
+    });
+
+    if (totalCorrectForCategory === 4) {
+        return true;
+    } else if (totalCorrectForCategory < 4 && totalCorrectForCategory > 0) {
+        // incomplete means failure
+        // 0 could still mean success
+        return false;
+    }
+
+    // could not determine if this category resulted in a win or a loss
+    return null;
+}
+
 function checkResult(message) {
     console.log("Checking result");
     console.log(message.guess);
 
     return chrome.storage.local.get("connections_result").then(results => {
         let categories = results["connections_result"]["categories"];
-        let foundResult = false;
 
         for (let categoryIndex = 0; categoryIndex < categories.length; categoryIndex++) {
-            let totalCorrectForCategory = 0;
-            categories[categoryIndex]["cards"].forEach(card => {
-                if (message.guess.includes(card["content"])) {
-                    totalCorrectForCategory++;
-                }
-            });
+            let result = checkResultCategory(categories, categoryIndex, message.guess);
 
-            if (totalCorrectForCategory < 4 && totalCorrectForCategory > 0) {
-                // incomplete means failure
-                // 0 could still mean success
-                foundResult = false;
-                break;
+            if (result == null) {
+                continue;
             }
 
-            if (totalCorrectForCategory === 4) {
-                foundResult = true;
-                break;
-            }
+            return result;
         }
 
-        return foundResult;
+        return false;
     });
 }
 
