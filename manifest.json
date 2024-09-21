@@ -21,7 +21,7 @@
     "storage"
   ],
   "background": {
-    "service_worker": "service-worker/connections.js",
+    "service_worker": "service-worker/connections-listener.js",
     "type": "module"
   }
 }
