@@ -1,7 +1,15 @@
+// enable fetch request mocking
+require("jest-fetch-mock").enableMocks()
+
 global.chrome = {
     runtime: {
         sendMessage: jest.fn()
     },
+    storage: {
+        local: {
+            set: jest.fn(),
+        }
+    }
 };
 
 global.document = {

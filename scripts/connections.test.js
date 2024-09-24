@@ -1,8 +1,8 @@
-const {collectResult, waitForElement} = require('./connections');
+const {collectResult, waitForElement} = require("./connections");
 
-describe('connections', () => {
+describe("scripts - connections", () => {
 
-    test('collectResult', () => {
+    test("collectResult", () => {
         document.querySelectorAll = jest.fn(() =>
             [
                 {value: "word1"},
