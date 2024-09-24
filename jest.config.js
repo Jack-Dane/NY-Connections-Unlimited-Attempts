@@ -1,3 +1,3 @@
 module.exports = {
-    setupFiles: ["<rootDir>/tests/mock-extension-apis.js"]
+  setupFiles: ["<rootDir>/tests/mock-extension-apis.js"],
 };
