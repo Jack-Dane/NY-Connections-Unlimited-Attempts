@@ -9,6 +9,7 @@
   "content_scripts": [
     {
       "js": [
+        "scripts/connections.js",
         "scripts/connections-listener.js"
       ],
       "matches": [

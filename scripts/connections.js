@@ -33,5 +33,3 @@ function collectResult() {
   });
   return selectedWords;
 }
-
-module.exports = { getConnectionsResult, waitForElement, collectResult };

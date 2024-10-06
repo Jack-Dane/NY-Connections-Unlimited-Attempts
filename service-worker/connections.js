@@ -2,7 +2,7 @@ function zeroLeadingDate(dateValue) {
   return ("0" + dateValue).slice(-2);
 }
 
-function storeResult() {
+export function storeResult() {
   const currentDate = new Date();
   const dateString = `\
 ${currentDate.getFullYear()}-\
@@ -40,7 +40,7 @@ function checkResultCategory(categories, categoryIndex, guess) {
   return null;
 }
 
-function checkResult(message) {
+export function checkResult(message) {
   return chrome.storage.local.get("connections_result").then((results) => {
     let categories = results["connections_result"]["categories"];
 
@@ -65,5 +65,3 @@ function checkResult(message) {
     return false;
   });
 }
-
-module.exports = { storeResult, checkResult };

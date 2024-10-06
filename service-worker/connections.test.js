@@ -1,4 +1,5 @@
-const { storeResult, checkResult } = require("./connections");
+import {expect, jest, test, describe, beforeEach} from '@jest/globals';
+import { storeResult, checkResult } from "./connections.js";
 
 describe("service worker - connections", function () {
   describe("storeResult", function () {

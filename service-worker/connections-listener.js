@@ -1,10 +1,10 @@
-const connections = require("./connections");
+import { storeResult, checkResult } from "./connections.js";
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.message === "store-result") {
-    connections.storeResult();
+    storeResult();
   } else if (message.message === "check-result") {
-    connections.checkResult(message).then((success) => {
+    checkResult(message).then((success) => {
       sendResponse({
         succeeded: success,
       });
