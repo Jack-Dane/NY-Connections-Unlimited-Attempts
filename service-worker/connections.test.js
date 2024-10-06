@@ -1,20 +1,44 @@
-import {expect, jest, test, describe, beforeEach} from '@jest/globals';
+import {
+  expect,
+  jest,
+  test,
+  describe,
+  beforeEach,
+  afterAll,
+  beforeAll,
+} from "@jest/globals";
+import { setupServer } from "msw/node";
+import { http, HttpResponse } from "msw";
 import { storeResult, checkResult } from "./connections.js";
+
+const server = setupServer(
+  http.get("https://www.nytimes.com/svc/connections/v2/2024-09-21.json", () =>
+    HttpResponse.json({ answers: "abc" }),
+  ),
+  http.get(
+    "https://www.nytimes.com/svc/connections/v2/2024-09-20.json",
+    () => new HttpResponse(null, { status: 500 }),
+  ),
+);
 
 describe("service worker - connections", function () {
   describe("storeResult", function () {
+    beforeAll(function () {
+      jest.useFakeTimers();
+      console.error = jest.fn();
+      server.listen();
+    });
+
+    afterAll(function () {
+      server.close();
+    });
+
     beforeEach(function () {
-      // reset mock doesn't appear to work
-      // these tests don't work in parallel but run OK in isolation
-      // https://github.com/jefflau/jest-fetch-mock/issues/78
-      // todo - use another fecth mock package?
-      fetchMock.resetMocks();
-      fetchMock.doMock();
+      jest.clearAllMocks();
+      server.resetHandlers();
     });
 
     test("ok fetch", async () => {
-      fetchMock.mockResponseOnce(JSON.stringify({ answers: "abc" }));
-      jest.useFakeTimers();
       jest.setSystemTime(new Date(2024, 8, 21));
       jest.spyOn(chrome.storage.local, "set");
 
@@ -23,22 +47,17 @@ describe("service worker - connections", function () {
       expect(chrome.storage.local.set).toHaveBeenCalledWith({
         connections_result: { answers: "abc" },
       });
-      expect(fetch).toBeCalledWith(
-        "https://www.nytimes.com/svc/connections/v2/2024-09-21.json",
-      );
+      expect(console.error).not.toHaveBeenCalled();
     });
 
     test("failed fetch", async () => {
-      fetchMock.mockReject("Boom!");
-      jest.useFakeTimers();
       jest.setSystemTime(new Date(2024, 8, 20));
       jest.spyOn(chrome.storage.local, "set");
-      console.error = jest.fn();
 
       await storeResult();
 
       expect(chrome.storage.local.set).not.toHaveBeenCalled();
-      expect(console.error).toHaveBeenCalledWith("Boom!");
+      expect(console.error).toHaveBeenCalled();
     });
   });
 
